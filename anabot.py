@@ -12,19 +12,27 @@ with open('secret', 'r') as f:
 
 
 def num_online(cli):
-    total = 0
-    for c in cli.get_all_members():
-        total += 1
-    return total
+    online = 0
+    offline = 0
+    bot = 0
+    for m in cli.get_all_members():
+        if m.status == 'online' and not m.bot:
+            online += 1
+        elif m.status == 'offline' and not m.bot:
+            offline += 1
+        else:
+            bot += 1
+    return online, offline, bot
 
 
 def log_message(message):
     channel = message.channel.name
     date = message.created_at
-    online = num_online(client)
-    with open('test.csv', 'a') as csvf:
-        writer = csv.writer(csvf, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow([channel, online, date.month, date.day, date.year, date.hour, date.minute, date.second])
+    online, offline, bot = num_online(client)
+    with open('test.csv', 'a') as f:
+        writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        writer.writerow(
+            [channel, online, offline, bot, date.month, date.day, date.year, date.hour, date.minute, date.second])
 
 
 @client.event
@@ -42,10 +50,8 @@ async def on_message(message):
         # await message.channel.send('pong')
 
     elif message.content == '!n':
-        total = 0
-        for c in client.get_all_members():
-            total += 1
-        print('Total: {}'.format(total))
+        online, offline, bots = num_online(client)
+        await message.channel.send('Online: {}; Offline: {}; Bots: {}'.format(online, offline, bots))
 
     elif message.content == '!q':
         await message.channel.send('Goodbye!')
