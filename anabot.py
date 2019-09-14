@@ -1,7 +1,13 @@
 import discord
+import csv
 
 client = discord.Client()
 token = ""
+
+filename = 'message_log.csv'
+with open(filename, mode='w+') as f:
+        f = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        f.writerow(['Time', 'Channel', 'Attachment?'])
 
 with open('secret', 'r') as f:
     token = f.read()
@@ -23,5 +29,8 @@ async def on_message(message):
         await message.channel.send('Goodbye!')
         print('Exiting...')
         await client.close()
+
+    with open(filename, mode='w') as f:
+        f.writerow([message.created_at, message.channel, (message.attachments != None)])
 
 client.run(token)
