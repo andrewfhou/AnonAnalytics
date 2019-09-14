@@ -6,7 +6,6 @@ token = ""
 with open('secret', 'r') as f:
     token = f.read()
 
-
 @client.event
 async def on_ready():
     print('Logged in as {0.user}'.format(client))
@@ -14,7 +13,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    if message.author == client.user:
+    if message.author == client.user or message.author.bot:
         return
     elif message.content == 'ping':
         print('Message channel: {} at {}'.format(message.channel, message.created_at))
@@ -24,6 +23,5 @@ async def on_message(message):
         await message.channel.send('Goodbye!')
         print('Exiting...')
         await client.close()
-
 
 client.run(token)
