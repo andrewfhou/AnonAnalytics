@@ -31,6 +31,6 @@ async def on_message(message):
         await client.close()
 
     with open(filename, mode='w') as f:
-        f.writerow([message.created_at, message.channel, (message.attachments != None)])
+        f.writerow([message.created_at, message.channel, (message.attachments is not None)])
 
 client.run(token)
