@@ -30,8 +30,8 @@ async def on_message(message):
         print('Exiting...')
         await client.close()
 
-    with open(filename, mode='w') as f:
+    with open(filename, mode='a') as f:
         f = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        f.writerow([message.created_at, message.channel, (message.attachments is not None)])
+        f.writerow([message.created_at, message.channel, message.author, message.content])
 
 client.run(token)
