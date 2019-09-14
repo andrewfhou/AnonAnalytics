@@ -60,13 +60,6 @@ async def on_message(message):
         print('Exiting...')
         await client.close()
 
-    elif message.content == '!lh':
-        # garbage channel ID = 622465697896857619
-        channel = client.get_channel(622465697896857619)
-        message_list = await channel.history().flatten()
-        last_message = message_list[1]
-        print(last_message.content)
-        log_message(last_message)
     else:
         log_message(message)
 
