@@ -13,7 +13,7 @@ async def on_ready():
     print (bot.user.id)
 
 @bot.command(pass_context=True)
-async def ping(ctx)
+async def ping(ctx):
     await bot.channel.send("pong")
     print ("ponged")
 
