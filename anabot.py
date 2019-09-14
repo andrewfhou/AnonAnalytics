@@ -16,12 +16,14 @@ def num_online(cli):
     offline = 0
     bot = 0
     for m in cli.get_all_members():
-        if m.status == 'online' and not m.bot:
-            online += 1
-        elif m.status == 'offline' and not m.bot:
+        if bool(m.bot):
+            bot += 1
+        elif str(m.status) == 'offline':
             offline += 1
         else:
-            bot += 1
+            online += 1
+
+    print('online: {}, offline: {}, bot: {}'.format(online, offline, bot))
     return online, offline, bot
 
 
@@ -65,6 +67,8 @@ async def on_message(message):
         last_message = message_list[1]
         print(last_message.content)
         log_message(last_message)
+    else:
+        log_message(message)
 
 
 '''
