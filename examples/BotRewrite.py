@@ -18,7 +18,7 @@ service = build('sheets', 'v4', http=creds.authorize(Http()))
 print('Connected to Google Sheets')
 
 # Get sheet ID
-file = open('SHID.txt','r')
+file = open('SHID.txt', 'r')
 SH_ID = file.read()
 
 print('Opened SH_ID')
@@ -26,36 +26,42 @@ print('Opened SH_ID')
 command_prefix = '!'
 bot = commands.Bot(command_prefix)
 
+
 @bot.command()
 async def addTime(ctx, a: str):
     date = ctx.message.created_at
     date = str(date.month) + '/' + str(date.day) + '/' + str(date.year)
     await ctx.send(ctx.message.created_at)
-    result = service.spreadsheets().values().get(spreadsheetId=SH_ID,range='A2').execute()        
+    result = service.spreadsheets().values().get(spreadsheetId=SH_ID, range='A2').execute()
     values = result.get('values', [])
     x = values[0][0][0]
-    service.spreadsheets().values().update(spreadsheetId=SH_ID,range='B' + str(x),valueInputOption='USER_ENTERED',body={"values":[[date]]}).execute()
-    service.spreadsheets().values().update(spreadsheetId=SH_ID,range='C' + str(x),valueInputOption='USER_ENTERED',body={"values":[[a]]}).execute()
+    service.spreadsheets().values().update(spreadsheetId=SH_ID, range='B' + str(x), valueInputOption='USER_ENTERED',
+                                           body={"values": [[date]]}).execute()
+    service.spreadsheets().values().update(spreadsheetId=SH_ID, range='C' + str(x), valueInputOption='USER_ENTERED',
+                                           body={"values": [[a]]}).execute()
     x += 1
-    service.spreadsheets().values().update(spreadsheetId=SH_ID,range='A2',valueInputOption='USER_ENTERED',body={"values":[[str(x)]]}).execute()
+    service.spreadsheets().values().update(spreadsheetId=SH_ID, range='A2', valueInputOption='USER_ENTERED',
+                                           body={"values": [[str(x)]]}).execute()
     await ctx.send('Time Added!')
+
 
 @bot.command()
 async def getAverage(ctx):
-    result = service.spreadsheets().values().get(spreadsheetId=SH_ID,range='A4').execute()
+    result = service.spreadsheets().values().get(spreadsheetId=SH_ID, range='A4').execute()
     values = result.get('values', [])
     time = values[0][0]
     await ctx.send(time)
 
+
 @bot.command()
 async def getOnDate(ctx, a: str):
-    result = service.spreadsheets().values().get(spreadsheetId=SH_ID,range='A2').execute()
+    result = service.spreadsheets().values().get(spreadsheetId=SH_ID, range='A2').execute()
     print(result)
     values = result.get('values', [])
     print(values)
     x = int(values[0][0])
     print(x)
-    result = service.spreadsheets().values().get(spreadsheetId=SH_ID,range='B1:C' + str(x)).execute()
+    result = service.spreadsheets().values().get(spreadsheetId=SH_ID, range='B1:C' + str(x)).execute()
     print(result)
     values = result.get('values', [])
     print(values)
@@ -65,9 +71,11 @@ async def getOnDate(ctx, a: str):
             return
     await ctx.send('No Date Found')
 
+
 @bot.command()
 async def testSend(ctx):
     await ctx.send('hi')
+
 
 @bot.event
 async def on_message(message):
@@ -76,6 +84,7 @@ async def on_message(message):
     elif message.author.id == 185214105072697345:
         jackId = '<@185214105072697345>'
         await message.channel.send('<@185214105072697345> is a bitch')
+
 
 @bot.event
 async def on_ready():
