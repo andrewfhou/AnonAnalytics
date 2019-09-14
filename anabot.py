@@ -11,12 +11,20 @@ with open('secret', 'r') as f:
     token = f.read()
 
 
+def num_online(cli):
+    total = 0
+    for c in cli.get_all_members():
+        total += 1
+    return total
+
+
 def log_message(message):
     channel = message.channel.name
     date = message.created_at
+    online = num_online(client)
     with open('test.csv', 'a') as csvf:
         writer = csv.writer(csvf, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow([channel, date.month, date.day, date.year, date.hour, date.minute, date.second])
+        writer.writerow([channel, online, date.month, date.day, date.year, date.hour, date.minute, date.second])
 
 
 @client.event
@@ -32,6 +40,13 @@ async def on_message(message):
         print('Message channel: {} at {}'.format(message.channel, message.created_at))
         await message.channel.send('Message received!')
         # await message.channel.send('pong')
+
+    elif message.content == '!n':
+        total = 0
+        for c in client.get_all_members():
+            total += 1
+        print('Total: {}'.format(total))
+
     elif message.content == '!q':
         await message.channel.send('Goodbye!')
         print('Exiting...')
