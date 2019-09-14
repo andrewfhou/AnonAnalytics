@@ -71,14 +71,4 @@ async def on_message(message):
         log_message(message)
 
 
-'''
-    with open(filename, mode='a') as f:
-        f = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        f.writerow([message.created_at, message.channel, message.author, message.content])
-
-with open(filename, mode='w+') as f:
-    f = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-    f.writerow(['Time', 'Channel', 'Attachment?'])
-'''
-
 client.run(token)
