@@ -1,15 +1,21 @@
 import discord
 import csv
 import json
+import os
 
 client = discord.Client()
 token = ""
 
-filename = 'message_log.csv'
+filename = 'log.csv'
 
 with open('secret', 'r') as f:
     token = f.read()
 
+if os.stat(filename).st_size == 0: # add csv headers if file does not exist
+    writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    writer.writerow(
+        ['channel', 'online', 'offline', 'bot?', 'month', 'day', 'year', 'hour', 'minute', 'second'])
+            
 
 def num_online(cli):
     online = 0
@@ -31,7 +37,7 @@ def log_message(message):
     channel = message.channel.name
     date = message.created_at
     online, offline, bot = num_online(client)
-    with open('test.csv', 'a') as f:
+    with open(filename, 'a') as f:
         writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         writer.writerow(
             [channel, online, offline, bot, date.month, date.day, date.year, date.hour, date.minute, date.second])
