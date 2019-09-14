@@ -17,7 +17,13 @@ async def on_message(message):
     if message.author == client.user:
         return
     elif message.content == 'ping':
-        await message.channel.send('pong')
+        print('Message channel: {} at {}'.format(message.channel, message.created_at))
+        await message.channel.send('Message received!')
+        # await message.channel.send('pong')
+    elif message.content == '!quit':
+        await message.channel.send('Goodbye!')
+        print('Exiting...')
+        await client.close()
 
 
 client.run(token)
