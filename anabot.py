@@ -2,7 +2,9 @@ import discord
 import csv
 import json
 import os
+from lightning import lightning
 
+lgn = Lightning()
 client = discord.Client()
 token = ""
 
@@ -11,11 +13,12 @@ filename = 'log.csv'
 with open('secret', 'r') as f:
     token = f.read()
 
-if os.stat(filename).st_size == 0: # add csv headers if file does not exist
-    writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-    writer.writerow(
-        ['channel', 'online', 'offline', 'bot?', 'month', 'day', 'year', 'hour', 'minute', 'second'])
-            
+if not os.path.exists(filename): # add csv headers if file does not exist
+    with open(filename, 'a') as f:
+        writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        writer.writerow(
+            ['channel', 'online', 'offline', 'bot?', 'month', 'day', 'year', 'hour', 'minute', 'second'])
+
 
 def num_online(cli):
     online = 0
