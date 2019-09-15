@@ -2,13 +2,12 @@ import discord
 import csv
 import json
 import os
-from lightning import lightning
 
-lgn = Lightning()
 client = discord.Client()
 token = ""
 
 filename = 'log.csv'
+jsonfile = 'log.json'
 
 with open('secret', 'r') as f:
     token = f.read()
@@ -19,6 +18,14 @@ if not os.path.exists(filename): # add csv headers if file does not exist
         writer.writerow(
             ['channel', 'online', 'offline', 'bot?', 'month', 'day', 'year', 'hour', 'minute', 'second'])
 
+if os.path.exists(jsonfile):
+    with open (jsonfile, 'r') as f:
+        # logDict = json.loads(str(f.readlines()))
+        logDict = json.load(f)
+else:
+    logDict = {'channel':[], 'online':[], 'offline':[], 'bot?':[], 'month':[], 'day':[], 'year':[], 'hour':[], 'minute':[], 'second':[]}
+    with open(jsonfile, 'w+') as f:
+        json.dump(logDict, f)
 
 def num_online(cli):
     online = 0
@@ -40,10 +47,17 @@ def log_message(message):
     channel = message.channel.name
     date = message.created_at
     online, offline, bot = num_online(client)
+    logData = [channel, online, offline, bot, date.month, date.day, date.year, date.hour, date.minute, date.second]
     with open(filename, 'a') as f:
         writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow(
-            [channel, online, offline, bot, date.month, date.day, date.year, date.hour, date.minute, date.second])
+        writer.writerow(logData)
+    
+    i = 0
+    for x in logDict:
+        logDict[x].append(logData[i])
+        i += 1
+    with open(jsonfile, 'w+') as f:
+        json.dump(logDict, f)
 
 
 @client.event
